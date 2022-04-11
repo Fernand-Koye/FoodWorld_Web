@@ -1,0 +1,27 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+
+    <section class="menus">
+
+        {% for menu in menus %}
+
+            <menus>
+                <h2> {{ menu.nom }} </h2>
+                <div class"content">
+                    {{ menu.quantite}}
+                    {{ menu.prix}}
+                    {{ menu.saison}}
+                    {{ menu.dateMiseEnRayon | date('d/m/Y')}}
+                    {{ menu.datePeremption | date('d/m/Y')}}
+                </div>
+                <div class"content">
+                    <img src="{{ asset('/images/banana.jpg') }}" alt="2">
+                </div>
+            </menus>
+
+        {% endfor %}
+
+    </section>
+
+{% endblock %}
