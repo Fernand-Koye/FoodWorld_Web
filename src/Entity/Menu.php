@@ -95,6 +95,16 @@ class Menu
      */
     private $idRestaurant;
 
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $likeMenu;
+
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $dislikeMenu;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -192,6 +202,30 @@ class Menu
     public function setIdRestaurant(int $idRestaurant): self
     {
         $this->idRestaurant = $idRestaurant;
+
+        return $this;
+    }
+
+    public function getLikeMenu(): ?int
+    {
+        return $this->likeMenu;
+    }
+
+    public function setLikeMenu(?int $likeMenu): self
+    {
+        $this->likeMenu = $likeMenu;
+
+        return $this;
+    }
+
+    public function getDislikeMenu(): ?int
+    {
+        return $this->dislikeMenu;
+    }
+
+    public function setDislikeMenu(?int $dislikeMenu): self
+    {
+        $this->dislikeMenu = $dislikeMenu;
 
         return $this;
     }

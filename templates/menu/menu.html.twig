@@ -18,6 +18,10 @@
                 <div class"content">
                     <img src="{{ asset('/images/banana.jpg') }}" alt="2">
                 </div>
+                <div class"content">
+                    <a href="{{ path('addLikeMenu', {'id': menu.id}) }}" class="btn btn-primary">J'aime : {{ menu.likeMenu}}</a>
+                    <a href="{{ path('adddisLikeMenu', {'id': menu.id}) }}" class="btn btn-primary">Je n'aime pas : {{ menu.dislikeMenu}}</a>
+                </div>
             </menus>
 
         {% endfor %}

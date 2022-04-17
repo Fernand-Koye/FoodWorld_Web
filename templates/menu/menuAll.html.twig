@@ -27,8 +27,12 @@
                     <img src="{{ asset('/images/banana.jpg') }}" alt="2">
                 </div>
                 <div class"content">
-                <a href="{{ path('gerant_update', {'id': menu.id}) }}" class="btn btn-primary">Update le plat</a>
-                <a href="{{ path('gerant_delete', {'id': menu.id}) }}" class="btn btn-primary">Delete le plat</a>
+                    <a href="{{ path('gerant_update', {'id': menu.id}) }}" class="btn btn-primary">Update le plat</a>
+                    <a href="{{ path('gerant_delete', {'id': menu.id}) }}" class="btn btn-primary">Delete le plat</a>
+                </div>
+                <div class"content">
+                    <a href="{{ path('addLikeMenu', {'id': menu.id}) }}" class="btn btn-primary">J'aime : {{ menus.likeMenu}}</a>
+                    <a href="{{ path('addLikeMenu', {'id': menu.id}) }}" class="btn btn-primary">Je n'aime pas : {{ menu.dislikeMenu}}</a>
                 </div>
             </menus>
 

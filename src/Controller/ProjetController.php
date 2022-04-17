@@ -18,8 +18,20 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 
 class ProjetController extends AbstractController
 {
+
+    /////////////////////////////////////////////////////////////// FRONT ////////////////////////////////////////////////
+
     /**
-     * @Route("/projet", name="app_projet")
+     * @Route("/", name="home")
+     */
+    public function home(){
+        return $this->render('restaurant/home.html.twig');
+    }
+
+    /////////////////////////////////////////////////////////////// RESTAURANT ////////////////////////////////////////////////
+
+    /**
+     * @Route("/restaurant", name="app_projet")
      */
     public function index(RestaurantRepository $repo): Response
     {
@@ -27,48 +39,13 @@ class ProjetController extends AbstractController
 
         $restaurants = $repo->findAll();
 
-        return $this->render('projet/index.html.twig', [
+        return $this->render('restaurant/index.html.twig', [
             'controller_name' => 'ProjetController','restaurants' => $restaurants
         ]);
     }
 
     /**
-     * @Route("/back/affiche", name="app_projet_back")
-     */
-    public function indexback(RestaurantRepository $repo): Response
-    {
-        //$repo = $this->getDoctrine()->getRepository(Restaurant::class);
-
-        $restaurants = $repo->findAll();
-
-        return $this->render('indexback.html.twig', [
-            'controller_name' => 'ProjetController','restaurants' => $restaurants
-        ]);
-    }
-
-    /**
-     * @Route("/", name="home")
-     */
-    public function home(){
-        return $this->render('projet/home.html.twig');
-    }
-
-    /**
-     * @Route("/back", name="back")
-     */
-    public function back(){
-        return $this->render('/back.html.twig');
-    }
-
-     /**
-     * @Route("/gerant", name="gerant")
-     */
-    public function gerant(){
-        return $this->render('/gerant.html.twig');
-    }
-
-    /**
-     * @Route("/projet/new", name="add")
+     * @Route("/restaurant/new", name="add")
      */
     public function add(Request $request){
         $restaurant = new restaurant();
@@ -86,43 +63,19 @@ class ProjetController extends AbstractController
                 'id' => $restaurant->getId()
             ]);
         }
-        return $this->render('projet/create.html.twig',[
+        return $this->render('restaurant/create.html.twig',[
             'controller_name' => 'ProjetController','formRestaurant' => $form->createView()
         ]);
     }
 
     /**
-     * @Route ("/projet/{id}", name="projet_show")
+     * @Route ("/restaurant/{id}", name="projet_show")
      */
     public function show(RestaurantRepository $repo, $id){
         //$repo = $this -> getDoctrine()->getRepository(Restaurant::class);
 
         $restaurant = $repo->find($id);
-        return $this->render('projet/show.html.twig',[
-            'controller_name' => 'ProjetController','restaurant' => $restaurant
-        ]);
-    }
-
-    /**
-     * @Route ("/menu/{id}", name="menu_show")
-     */
-    public function show_menu(MenuRepository $repo, $id){
-        //$repo = $this -> getDoctrine()->getRepository(Restaurant::class);
-
-        $menus = $repo->findBy(array('idRestaurant' => $id));
-        return $this->render('projet/menu.html.twig',[
-            'controller_name' => 'ProjetController','menus' => $menus
-        ]);
-    }
-
-    /**
-     * @Route ("/back/{id}", name="show_back")
-     */
-    public function show_index(RestaurantRepository $repo, $id){
-        //$repo = $this -> getDoctrine()->getRepository(Restaurant::class);
-
-        $restaurant = $repo->find($id);
-        return $this->render('show_back.html.twig',[
+        return $this->render('restaurant/show.html.twig',[
             'controller_name' => 'ProjetController','restaurant' => $restaurant
         ]);
     }
@@ -148,14 +101,13 @@ class ProjetController extends AbstractController
             ]);
         }
 
-        return $this->render('projet/create.html.twig',[
+        return $this->render('restaurant/create.html.twig',[
             'controller_name' => 'ProjetController','formRestaurant' => $form->createView()
         ]);
     }
 
-    
     /**
-     * @Route("/projet/delete/{id}", name="projet_delete")
+     * @Route("/restaurant/delete/{id}", name="projet_delete")
      */
     public function delete($id){
         $repository = $this->getDoctrine()->getRepository(Restaurant::class);
@@ -182,94 +134,87 @@ class ProjetController extends AbstractController
         return $this->redirectToRoute('app_projet_back');
     }
 
-    ///////////////////////////////////////////////////////////////GERANT RESTAURANT////////////////////////////////////////////////
     /**
-     * @Route ("/menuAll", name="menuAll")
+     * @Route("/back/affiche", name="app_projet_back")
      */
-    public function show_menuAll(MenuRepository $repo){
+    public function indexback(RestaurantRepository $repo): Response
+    {
+        //$repo = $this->getDoctrine()->getRepository(Restaurant::class);
+
+        $restaurants = $repo->findAll();
+
+        return $this->render('restaurant/indexback.html.twig', [
+            'controller_name' => 'ProjetController','restaurants' => $restaurants
+        ]);
+    }
+
+    /**
+     * @Route ("/back/{id}", name="show_back")
+     */
+    public function show_index(RestaurantRepository $repo, $id){
         //$repo = $this -> getDoctrine()->getRepository(Restaurant::class);
 
-        $menus = $repo->findAll();
-        return $this->render('menuAll.html.twig',[
-            'controller_name' => 'ProjetController','menus' => $menus
+        $restaurant = $repo->find($id);
+        return $this->render('restaurant/show_back.html.twig',[
+            'controller_name' => 'ProjetController','restaurant' => $restaurant
+        ]);
+    }
+
+    ///////////////////////////////////////////////////////////////GERANT RESTAURANT////////////////////////////////////////////////
+
+    /**
+     * @Route("/gerant", name="gerant")
+     */
+    public function gerant(){
+        return $this->render('gerant.html.twig');
+    }
+
+    /////////////////////////////////////////////////////////////// BACK  ////////////////////////////////////////////////
+
+    /**
+     * @Route("/back", name="back")
+     */
+    public function back(){
+        return $this->render('back.html.twig');
+    }
+
+    /**
+     * @Route("/restaurant/like/{id}", name="addLike")
+     */
+    public function addLike($id){
+
+        $repository = $this->getDoctrine()->getRepository(Restaurant::class);
+        $restaurant = $repository->find($id);
+
+        $restaurant->setLikeRestaurant($restaurant->getLikeRestaurant() + 1);
+
+        //if(restaurant->setIdClient != $idClient){
+        $manager = $this->getDoctrine()->getManager();
+        $manager ->persist($restaurant);
+        $manager->flush();
+        //}
+
+        return $this->redirectToRoute('projet_show', [
+            'id' => $restaurant->getId()
         ]);
     }
 
     /**
-     * @Route("/gerant/delete/{id}", name="gerant_delete")
+     * @Route("/restaurant/dislike/{id}", name="adddisLike")
      */
-    public function delete_gerant($id){
-        $repository = $this->getDoctrine()->getRepository(Menu::class);
-        $menu = $repository->find($id);
+    public function adddisLike($id){
 
-        $em = $this->getDoctrine()->getManager();
-        $em ->remove($menu);
-        $em ->flush();
+        $repository = $this->getDoctrine()->getRepository(Restaurant::class);
+        $restaurant = $repository->find($id);
 
-        return $this->redirectToRoute('app_projet_back');
-    }
+        $restaurant->setDislikeRestaurant($restaurant->getDislikeRestaurant() + 1);
 
-    /**
-     * @Route("/gerant/new", name="add_gerant")
-     */
-    public function add_gerant(Request $request){
-        $menu = new menu();
+        $manager = $this->getDoctrine()->getManager();
+        $manager ->persist($restaurant);
+        $manager->flush();
 
-        $form = $this->createForm(MenuType::class, $menu);
-        $form->add('Ajout',SubmitType::class);
-        $form->handleRequest($request);
-
-        if($form->isSubmitted() && $form->isValid()){
-            $manager = $this->getDoctrine()->getManager();
-            $manager->persist($menu);
-            $manager->flush();
-
-            return $this->redirectToRoute('menuAll', [
-                'id' => $menu->getId()
-            ]);
-        }
-        return $this->render('create_menu.html.twig',[
-            'controller_name' => 'ProjetController','formResto' => $form->createView()
+        return $this->redirectToRoute('projet_show', [
+            'id' => $restaurant->getId()
         ]);
-    }
-
-    /**
-     * @Route("/gerant/update/{id}", name="gerant_update")
-     */
-    public function update_menu(Request $request, $id){
-        $repository = $this->getDoctrine()->getRepository(Menu::class);
-        $menu = $repository->find($id);
-
-        $form = $this->createForm(MenuType::class, $menu);
-        $form ->add('Upadte', SubmitType::class);
-        $form ->handleRequest($request);
-
-        if($form->isSubmitted() && $form->isValid()){
-            $em = $this->getDoctrine()->getManager();
-            $em ->persist($menu);
-            $em ->flush();
-
-            return $this->redirectToRoute('menuAll', [
-                'controller_name' => 'ProjetController','id' => $menu->getId()
-            ]);
-        }
-
-        return $this->render('create_menu.html.twig',[
-            'controller_name' => 'ProjetController','formResto' => $form->createView()
-        ]);
-    }
-
-    /**
-     * @Route("/gerant/delete/{id}", name="gerant_delete")
-     */
-    public function delete_menu($id){
-        $repository = $this->getDoctrine()->getRepository(Menu::class);
-        $menu = $repository->find($id);
-
-        $em = $this->getDoctrine()->getManager();
-        $em ->remove($menu);
-        $em ->flush();
-
-        return $this->redirectToRoute('menuAll');
     }
 }

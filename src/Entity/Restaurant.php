@@ -56,7 +56,7 @@ class Restaurant
 
     /**
      * @var string
-     * @ORM\Column(name="image", type="blob", length=0, nullable=false)
+     * @ORM\Column(name="image", type="blob", length=0)
      */
     private $image;
 
@@ -71,6 +71,21 @@ class Restaurant
      * @ORM\Column(name="gerant_restaurant", type="string", length=256)
      */
     private $gerantRestaurant;
+
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $likeRestaurant;
+
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $dislikeRestaurant;
+
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $idClient;
 
     public function getId(): ?int
     {
@@ -137,5 +152,40 @@ class Restaurant
         return $this;
     }
 
+    public function getLikeRestaurant(): ?int
+    {
+        return $this->likeRestaurant;
+    }
+
+    public function setLikeRestaurant(?int $likeRestaurant): self
+    {
+        $this->likeRestaurant = $likeRestaurant;
+
+        return $this;
+    }
+
+    public function getDislikeRestaurant(): ?int
+    {
+        return $this->dislikeRestaurant;
+    }
+
+    public function setDislikeRestaurant(?int $dislikeRestaurant): self
+    {
+        $this->dislikeRestaurant = $dislikeRestaurant;
+
+        return $this;
+    }
+
+    public function getIdClient(): ?int
+    {
+        return $this->idClient;
+    }
+
+    public function setIdClient(?int $idClient): self
+    {
+        $this->idClient = $idClient;
+
+        return $this;
+    }
 
 }
