@@ -1,6 +1,8 @@
 <?php
 
 namespace App\Entity;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Symfony\Component\Validator\Constraints as Assert;
 
 use Doctrine\ORM\Mapping as ORM;
@@ -86,6 +88,16 @@ class Restaurant
      * @ORM\Column(type="integer", nullable=true)
      */
     private $idClient;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Commentaire::class, mappedBy="idRestaurant")
+     */
+    private $commentaires;
+
+    public function __construct()
+    {
+        $this->commentaires = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -184,6 +196,36 @@ class Restaurant
     public function setIdClient(?int $idClient): self
     {
         $this->idClient = $idClient;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Commentaire>
+     */
+    public function getCommentaires(): Collection
+    {
+        return $this->commentaires;
+    }
+
+    public function addCommentaire(Commentaire $commentaire): self
+    {
+        if (!$this->commentaires->contains($commentaire)) {
+            $this->commentaires[] = $commentaire;
+            $commentaire->setIdRestaurant($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCommentaire(Commentaire $commentaire): self
+    {
+        if ($this->commentaires->removeElement($commentaire)) {
+            // set the owning side to null (unless already changed)
+            if ($commentaire->getIdRestaurant() === $this) {
+                $commentaire->setIdRestaurant(null);
+            }
+        }
 
         return $this;
     }

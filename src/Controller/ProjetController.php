@@ -7,13 +7,18 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use\App\Entity\Restaurant;
 use\App\Entity\Menu;
+use\App\Entity\Commentaire;
 use App\Repository\RestaurantRepository;
 use App\Repository\MenuRepository;
+use App\Repository\CommentaireRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use App\Form\RestaurantType;
+use App\Form\CommentaireType;
 use App\Form\MenuType;
+use Symfony\UX\Chartjs\Builder\ChartBuilderInterface;
+use Symfony\UX\Chartjs\Model\Chart;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 
 class ProjetController extends AbstractController
@@ -71,12 +76,32 @@ class ProjetController extends AbstractController
     /**
      * @Route ("/restaurant/{id}", name="projet_show")
      */
-    public function show(RestaurantRepository $repo, $id){
+    public function show(Request $request, RestaurantRepository $repo, CommentaireRepository $repoCommentaire, $id){
         //$repo = $this -> getDoctrine()->getRepository(Restaurant::class);
 
+        $commentaire = new commentaire();
+
+        $comment = $repoCommentaire->findBy(array('idRestaurant' => $id));
+
         $restaurant = $repo->find($id);
+
+        $form = $this->createForm(CommentaireType::class, $commentaire);
+        $form->add('Commenter',SubmitType::class);
+        $form->handleRequest($request);
+
+        if($form->isSubmitted() && $form->isValid()){
+            $commentaire->setIdRestaurant($restaurant);
+            $em = $this->getDoctrine()->getManager();
+            $em ->persist($commentaire);
+            $em ->flush();
+
+            return $this->redirectToRoute('projet_show', [
+                'controller_name' => 'ProjetController','id' => $restaurant->getId()
+            ]);
+        }
         return $this->render('restaurant/show.html.twig',[
-            'controller_name' => 'ProjetController','restaurant' => $restaurant
+            'controller_name' => 'ProjetController','restaurant' => $restaurant,'formCommentaire' => $form->createView(),
+            'commentaire' => $comment
         ]);
     }
 
@@ -217,4 +242,26 @@ class ProjetController extends AbstractController
             'id' => $restaurant->getId()
         ]);
     }
+
+    /**
+     * @Route("/stats", name="stats")
+     */
+    public function statistiques(RestaurantRepository $repo){
+
+        $restaurants = $repo->findAll();
+        $nom = [];
+        $likeRestaurant = [];
+        $dislikeRestaurant = [];
+
+        foreach($restaurants as $restaurant){
+            $nom[] = $restaurant->getNom();
+            $likeRestaurant[] = $restaurant->getLikeRestaurant();
+            $dislikeRestaurant[] = $restaurant->getDislikeRestaurant();
+        }
+        return $this->render('restaurant/stats.html.twig',[
+            'nom' => json_encode($nom), 'likeRestaurant' => json_encode($likeRestaurant),
+            'dislikeRestaurant' => json_encode($dislikeRestaurant)
+        ]);
+    }
+    
 }

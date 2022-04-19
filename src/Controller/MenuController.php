@@ -13,6 +13,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use App\Form\RestaurantType;
+use App\Form\ContactType;
 use App\Form\MenuType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 
@@ -168,6 +169,36 @@ class MenuController extends AbstractController
 
         return $this->redirectToRoute('menu_show', [
             'id' => $menu->getIdRestaurant()
+        ]);
+    }
+
+    /**
+     * @Route("/mailing", name="mailing")
+     */
+    public function mailing(Request $request, \Swift_Mailer $mailer){
+
+        $form = $this->createForm(ContactType::class);
+        $form->handleRequest($request);
+
+        if($form->isSubmitted() && $form->isValid()){
+            $contact = $form->getData();
+
+            $message = (new \Swift_Message('Nouveau Contact'))
+                ->setFrom('leoreborn345@gmail.com')
+                ->setTo($contact['email'])
+                ->setBody(
+                    $this->renderView(
+                        'emails/email.html.twig', compact('contact')
+                    ),
+                    'text/html'
+                );
+
+            $mailer->send($message);
+            $this->addFlash('message', 'Le meessage a bien été envoyé');
+            return $this->redirectToRoute('mailing');
+        }
+        return $this->render('emails/contact.html.twig',[
+            'controller_name' => 'ProjetController','formEmail' => $form->createView()
         ]);
     }
 }

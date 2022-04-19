@@ -13,17 +13,26 @@
                     <img src="{{ asset('/images/2.jpg') }}" alt="2">
             </div>
             <div class"content">
-            {% for comment in restaurant.Commenter %}
-            {}
-            </div>
-            <div class"content">
                 <a href="{{ path('addLike', {'id': restaurant.id}) }}" class="btn btn-primary">J'aime : {{ restaurant.likeRestaurant}}</a>
                 <a href="{{ path('adddisLike', {'id': restaurant.id}) }}" class="btn btn-primary">Je n'aime pas : {{ restaurant.dislikeRestaurant}}</a>
             </div>
             <br />
             <div class"content">
-                <a href="{{ path('promotion', {'id': restaurant.id}) }}" class="btn btn-primary">Commenter</a>
-                <a href="{{ path('promotion', {'id': restaurant.id}) }}" class="btn btn-primary">Signaler</a>
+                <h1>commentaire</h1>
+                {% for comment in commentaire %}
+                    {{ comment.contenu }}
+                    <br />
+                {% else %}
+                    Aucun commentaire
+                {% endfor %}
+            </div>
+            <br />
+            <div class"content">
+                {{ form_start(formCommentaire, {'attr':{'novalidate':'novalidate'}}) }}
+                
+                {{ form_row(formCommentaire.contenu, {'attr': {'placeholder': "Entrer votre commentaire" }}) }}
+
+                {{ form_end(formCommentaire) }}
             </div>
         </restaurant>
     </section>
