@@ -8,9 +8,11 @@ use Symfony\Component\Routing\Annotation\Route;
 use\App\Entity\Restaurant;
 use\App\Entity\Menu;
 use\App\Entity\Commentaire;
+use\App\Entity\Client;
 use App\Repository\RestaurantRepository;
 use App\Repository\MenuRepository;
 use App\Repository\CommentaireRepository;
+use App\Repository\ClientRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
@@ -76,14 +78,15 @@ class ProjetController extends AbstractController
     /**
      * @Route ("/restaurant/{id}", name="projet_show")
      */
-    public function show(Request $request, RestaurantRepository $repo, CommentaireRepository $repoCommentaire, $id){
+    public function show(Request $request, RestaurantRepository $repo, CommentaireRepository $repoCommentaire, ClientRepository $repoClient, $id){
         //$repo = $this -> getDoctrine()->getRepository(Restaurant::class);
 
         $commentaire = new commentaire();
-
+        $idC = 1;
         $comment = $repoCommentaire->findBy(array('idRestaurant' => $id));
 
         $restaurant = $repo->find($id);
+        $client = $repoClient->find($idC);
 
         $form = $this->createForm(CommentaireType::class, $commentaire);
         $form->add('Commenter',SubmitType::class);
@@ -91,16 +94,17 @@ class ProjetController extends AbstractController
 
         if($form->isSubmitted() && $form->isValid()){
             $commentaire->setIdRestaurant($restaurant);
+            $commentaire->setIdUser($client);
             $em = $this->getDoctrine()->getManager();
             $em ->persist($commentaire);
             $em ->flush();
 
             return $this->redirectToRoute('projet_show', [
-                'controller_name' => 'ProjetController','id' => $restaurant->getId()
+                'id' => $restaurant->getId()
             ]);
         }
         return $this->render('restaurant/show.html.twig',[
-            'controller_name' => 'ProjetController','restaurant' => $restaurant,'formCommentaire' => $form->createView(),
+            'restaurant' => $restaurant,'formCommentaire' => $form->createView(),
             'commentaire' => $comment
         ]);
     }
@@ -264,4 +268,52 @@ class ProjetController extends AbstractController
         ]);
     }
     
+    /**
+     * @Route("/restaurant/update/{id}/{idRestaurant}", name="modifierCommentaire")
+     */
+    public function updateCommentaire(Request $request, $id, $idRestaurant){
+        $repository = $this->getDoctrine()->getRepository(Commentaire::class);
+        $repo = $this->getDoctrine()->getRepository(Restaurant::class);
+
+        //$idC = 1;
+
+        $comment = $repository->findBy(array('idRestaurant' => $idRestaurant));
+        $commentaire = $repository->find($id);
+        $restaurant = $repo->find($idRestaurant);
+
+        $form = $this->createForm(CommentaireType::class, $commentaire);
+        $form ->add('Upadte', SubmitType::class);
+        $form ->handleRequest($request);
+
+        if($form->isSubmitted() && $form->isValid() /*&& $idC==$commentaire->getIdUser()*/){
+            $em = $this->getDoctrine()->getManager();
+            $em ->persist($commentaire);
+            $em ->flush();
+
+            return $this->redirectToRoute('projet_show', [
+                'id' => $restaurant->getId()
+            ]);
+        }
+
+        return $this->render('restaurant/show.html.twig',[
+            'restaurant' => $restaurant,'formCommentaire' => $form->createView(),
+            'commentaire' => $comment
+        ]);
+    }
+
+    /**
+     * @Route("/restaurant/delete/{id}/{idRestaurant}", name="supprimerCommentaire")
+     */
+    public function delete_commentaire($id, $idRestaurant){
+        $repository = $this->getDoctrine()->getRepository(Commentaire::class);
+        $commentaire = $repository->find($id);
+
+        $em = $this->getDoctrine()->getManager();
+        $em ->remove($commentaire);
+        $em ->flush();
+
+        return $this->redirectToRoute('projet_show', [
+            'controller_name' => 'ProjetController','id' => $idRestaurant
+        ]);
+    }
 }

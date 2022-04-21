@@ -2,13 +2,15 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * Client
  *
  * @ORM\Table(name="client")
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass=App\Repository\ClientRepository::class)
  */
 class Client
 {
@@ -33,7 +35,7 @@ class Client
      *
      * @ORM\Column(name="prÃ©nom", type="string", length=256, nullable=false)
      */
-    private $prã©nom;
+    private $prï¿½nom;
 
     /**
      * @var string
@@ -56,6 +58,16 @@ class Client
      */
     private $typeUser;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Commentaire::class, mappedBy="idUser")
+     */
+    private $commentaires;
+
+    public function __construct()
+    {
+        $this->commentaires = new ArrayCollection();
+    }
+
     public function getId(): ?int
     {
         return $this->id;
@@ -73,14 +85,14 @@ class Client
         return $this;
     }
 
-    public function getPrã©nom(): ?string
+    public function getPrï¿½nom(): ?string
     {
-        return $this->prã©nom;
+        return $this->prï¿½nom;
     }
 
-    public function setPrã©nom(string $prã©nom): self
+    public function setPrï¿½nom(string $prï¿½nom): self
     {
-        $this->prã©nom = $prã©nom;
+        $this->prï¿½nom = $prï¿½nom;
 
         return $this;
     }
@@ -117,6 +129,36 @@ class Client
     public function setTypeUser(int $typeUser): self
     {
         $this->typeUser = $typeUser;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Commentaire>
+     */
+    public function getCommentaires(): Collection
+    {
+        return $this->commentaires;
+    }
+
+    public function addCommentaire(Commentaire $commentaire): self
+    {
+        if (!$this->commentaires->contains($commentaire)) {
+            $this->commentaires[] = $commentaire;
+            $commentaire->setIdUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCommentaire(Commentaire $commentaire): self
+    {
+        if ($this->commentaires->removeElement($commentaire)) {
+            // set the owning side to null (unless already changed)
+            if ($commentaire->getIdUser() === $this) {
+                $commentaire->setIdUser(null);
+            }
+        }
 
         return $this;
     }

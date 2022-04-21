@@ -172,10 +172,7 @@ class MenuController extends AbstractController
         ]);
     }
 
-    /**
-     * @Route("/mailing", name="mailing")
-     */
-    public function mailing(Request $request, \Swift_Mailer $mailer){
+    /*public function mailing(Request $request, \Swift_Mailer $mailer){
 
         $form = $this->createForm(ContactType::class);
         $form->handleRequest($request);
@@ -200,5 +197,5 @@ class MenuController extends AbstractController
         return $this->render('emails/contact.html.twig',[
             'controller_name' => 'ProjetController','formEmail' => $form->createView()
         ]);
-    }
+    }*/
 }

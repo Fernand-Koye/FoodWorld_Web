@@ -29,6 +29,11 @@ class Commentaire
      */
     private $idRestaurant;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=Client::class, inversedBy="commentaires")
+     */
+    private $idUser;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -54,6 +59,18 @@ class Commentaire
     public function setIdRestaurant(?Restaurant $idRestaurant): self
     {
         $this->idRestaurant = $idRestaurant;
+
+        return $this;
+    }
+
+    public function getIdUser(): ?Client
+    {
+        return $this->idUser;
+    }
+
+    public function setIdUser(?Client $idUser): self
+    {
+        $this->idUser = $idUser;
 
         return $this;
     }
