@@ -5,8 +5,10 @@
         <restaurant>
             <h2> {{ restaurant.nom }} </h2>
             <div class"content">
-            {{ restaurant.position }}
-            {{ restaurant.dateEntrer | date('d/m/Y')}}
+            Position : {{ restaurant.position }}
+            </br>
+            date d'entrer : {{ restaurant.dateEntrer | date('d/m/Y')}}
+            </br>
                 Ayant pour proprietaire : {{ restaurant.gerantRestaurant }}
             </div>
             <div class"content">
