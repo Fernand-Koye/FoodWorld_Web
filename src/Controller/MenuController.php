@@ -7,14 +7,19 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use\App\Entity\Restaurant;
 use\App\Entity\Menu;
+use\App\Entity\Note;
+use\App\Entity\Client;
 use App\Repository\RestaurantRepository;
 use App\Repository\MenuRepository;
+use App\Repository\ClientRepository;
+use App\Repository\NoteRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use App\Form\RestaurantType;
 use App\Form\ContactType;
 use App\Form\MenuType;
+use App\Form\NoteType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 
 class MenuController extends AbstractController
@@ -198,4 +203,38 @@ class MenuController extends AbstractController
             'controller_name' => 'ProjetController','formEmail' => $form->createView()
         ]);
     }*/
+
+    /**
+     * @Route ("/menu/note/{id}", name="menu_note")
+     */
+    public function note_menu(Request $request, MenuRepository $repo, ClientRepository $repoClient, NoteRepository $repoNote, $id){
+
+        $menus = $repo->find($id);
+        $note = $repoNote->findBy(array('Menu' => $id));
+        
+        return $this->render('menu/note.html.twig',[
+            'controller_name' => 'ProjetController','menus' => $menus/*, 'formNote' => $form->createview()*/
+        ]);
+    }
+
+    /**
+     * @Route ("/menu/note/envoie/{id}/{idMenu}", name="menu_note_envoie")
+     */
+    public function ajouter_note(Request $request, ClientRepository $repoClient, MenuRepository $repoMenu, $id, $idMenu){
+        $note = new note();
+        $idC = 1;
+        $menu = $repoMenu->find($idMenu);
+        $client = $repoClient->find($idC);
+        $no = $_POST["note"];
+        $manager = $this->getDoctrine()->getManager();
+        $note->setIdClient($client);
+        $note->setMenu($menu);
+        $note->setNote($no);
+        $manager->persist($note);
+        $manager->flush();
+
+        return $this->redirectToRoute('menu_show', [
+            'id' => $id
+        ]);
+    }
 }

@@ -95,6 +95,7 @@ class ProjetController extends AbstractController
         if($form->isSubmitted() && $form->isValid()){
             $commentaire->setIdRestaurant($restaurant);
             $commentaire->setIdUser($client);
+            $commentaire->setDateCreation(new \DateTime());
             $em = $this->getDoctrine()->getManager();
             $em ->persist($commentaire);
             $em ->flush();
@@ -287,6 +288,7 @@ class ProjetController extends AbstractController
 
         if($form->isSubmitted() && $form->isValid() /*&& $idC==$commentaire->getIdUser()*/){
             $em = $this->getDoctrine()->getManager();
+            $commentaire->setDateCreation(new \DateTime());
             $em ->persist($commentaire);
             $em ->flush();
 

@@ -34,6 +34,11 @@ class Commentaire
      */
     private $idUser;
 
+    /**
+     * @ORM\Column(type="datetime")
+     */
+    private $dateCreation;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -71,6 +76,18 @@ class Commentaire
     public function setIdUser(?Client $idUser): self
     {
         $this->idUser = $idUser;
+
+        return $this;
+    }
+
+    public function getDateCreation(): ?\DateTimeInterface
+    {
+        return $this->dateCreation;
+    }
+
+    public function setDateCreation(\DateTimeInterface $dateCreation): self
+    {
+        $this->dateCreation = $dateCreation;
 
         return $this;
     }
