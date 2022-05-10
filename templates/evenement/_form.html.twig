@@ -1,0 +1,30 @@
+{{ form_start(form, {'attr': {'novalidate': 'novalidate' ,'style': 'display:inline'}}) }}
+ 
+
+ 
+<span class="form-group " >
+<span class="col-md-1 ">
+ {{ form_label (form.nom,"le nom est ") }}
+
+    {{ form_widget(form.nom , {'attr': {'class': 'form-control'}}) }}
+      {{ form_errors(form.nom) }}  
+ </span>
+
+     <br>
+ <span class="col-md-1 col-md-offset-1">
+   {{ form_label (form.date,"la date  de fondation est : ") }}
+     {{ form_widget(form.date, {'attr': {'class': 'form-inline'}}) }}
+       {{ form_errors(form.date) }} 
+ </span>  
+  {{ form_label (form.image,"insérer l'image:' ")  }}
+     {{ form_widget(form.image) }}
+    
+<span class="col-md-1 col-md-offset-1">
+     {{ form_widget(form.commentaire , {'attr': {'class': 'form-control'}}) }}
+      {{ form_errors(form.commentaire) }}  
+ </span>
+
+
+      {{ form_rest(form)}}
+    <button class="btn">{{ button_label|default('Save') }}</button>
+{{ form_end(form) }}

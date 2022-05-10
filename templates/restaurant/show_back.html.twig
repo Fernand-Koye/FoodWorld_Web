@@ -1,0 +1,21 @@
+{% extends 'back.html.twig' %}
+
+{% block body %}
+    <section class="restaurants">
+    <div class="col-lg-3 col-md-100  col-sm-6 col-lg-2 col-xl-3 wow fadeInUp " data-wow-delay="0.1s" align="right">
+            <div class="team-item text-center rounded overflow-hidden">
+            <h2> {{ restaurant.nom }} </h2>
+            <div class"content">
+            Position : {{ restaurant.position }}
+            </br>
+            date d'entrer : {{ restaurant.dateEntrer | date('d/m/Y')}}
+            </br>
+                Ayant pour proprietaire : {{ restaurant.gerantRestaurant }}
+            </div>
+            <div class"content">
+                <img style="width: 200px" src="{{ asset('uploads/' ~ restaurant.image) }}">
+            </div>
+        </div>
+    </div>
+    </section>
+{% endblock %}

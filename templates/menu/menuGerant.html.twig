@@ -1,0 +1,44 @@
+{% extends 'gerant.html.twig' %}
+
+{% block body %}
+    <section class="restaurants">
+        <div class="col-lg-3 col-md-100  col-sm-6 col-lg-2 col-xl-3 wow fadeInUp " data-wow-delay="0.1s" align="right">
+                <div class="team-item text-center rounded overflow-hidden">
+            <h2> {{ restaurant.nom }} </h2>
+            <div class"content">
+            Position : {{ restaurant.position }}
+            </br>
+            date d'entrer : {{ restaurant.dateEntrer | date('d/m/Y')}}
+            </br>
+                Ayant pour proprietaire : {{ restaurant.gerantRestaurant }}
+            </div>
+            <div class"content">
+                <img style="width: 200px" src="{{ asset('uploads/' ~ restaurant.image) }}">
+            </div>
+            <div class"content">
+                <a href="{{ path('menu_show_Gerant', {'id': restaurant.id}) }}" class="btn btn-primary">Afficher Menu</a>
+            </div>
+            <br />
+            <div class"content">
+                <h1>commentaire</h1>
+                {% for comment in commentaire %}
+                    {{ comment.contenu }} ecrit le {{ comment.dateCreation | date('d/m/Y') }} à {{ comment.dateCreation | date('H:i') }}
+                    <a href="{{ path('modifierCommentaire', {'id': comment.id, 'idRestaurant': restaurant.id}) }}" >Modifier </a>
+                    <a href="{{ path('supprimerCommentaire', {'id': comment.id, 'idRestaurant': restaurant.id}) }}" >Supprimer </a>
+                    <br />
+                {% else %}
+                    Aucun commentaire
+                {% endfor %}
+            </div>
+            <br />
+            {#<div class"content">
+                {{ form_start(formCommentaire, {'attr':{'novalidate':'novalidate'}}) }}
+                
+                {{ form_row(formCommentaire.contenu, {'attr': {'placeholder': "Entrer votre commentaire" }}) }}
+
+                {{ form_end(formCommentaire) }}
+            </div>#}
+        </div>
+    </div>
+    </section>
+{% endblock %}

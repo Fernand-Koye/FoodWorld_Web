@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello CommandController!
+{% endblock %}
+
+{% block body %}
+
+	{{form_start(CommandForm)}}
+	{{form_widget(CommandForm)}}
+
+	<button type="submit">X</button>
+	{{form_end(CommandForm)}}
+{% endblock %}

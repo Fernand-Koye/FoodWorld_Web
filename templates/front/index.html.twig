@@ -1,0 +1,23 @@
+{% extends 'frontbase.html.twig' %}
+
+{% block title %}Hello FrontController!
+{% endblock %}
+
+{% block body %}
+	{% for o in tab %}
+		<li>
+			<figure class="image"><img src="{{asset('/front/img/img_square_5.jpg')}}" alt="Free Bootstrap Template by uicookies.com"></figure>
+			<div class="text">
+				<span class="price">{{o.prix}}</span>
+				<h3>{{o.nomplat}}</h3>
+				<p>{{o.description}}</p>
+				<p>{{o.jaime}}</p>
+				<a href="{{path('front_jaime',{'id':o.id})}}" >
+					<i class="icon-heart icon-4x"></i>
+					<span>J'aime</span>
+				</a>
+			</div>
+		<a href="{{path('AddPlatToPanier',{'id':o.id})}}">Add to Panier</a>
+		</li>
+	{% endfor %}
+{% endblock %}

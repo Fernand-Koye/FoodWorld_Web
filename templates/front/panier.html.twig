@@ -1,0 +1,27 @@
+{% extends 'frontbase.html.twig' %}
+
+{% block title %}Panier!
+{% endblock %}
+{% block ff %}{% endblock %}
+
+{% block body %}
+	{% for o in tab %}
+		<li>
+			<figure class="image"><img src="{{asset('/front/img/img_square_5.jpg')}}" alt=""></figure>
+			<div class="text">
+				<span class="price">{{o.prix}}</span>
+				<h3>{{o.getPlat().getNomPlat()}}</h3>
+				<p>{{o.description}}</p>
+				<a href="{{path('removePlatPanier',{'id':o.id})}}">delete du Panier</a>
+			</div>
+		</li>
+	{% endfor %}
+	{# <input type="submit" name="submit" id="submit" value="Confirmer Command :{{total}}" class="btn btn-lg btn-primary btn-block"> #}
+	{# <a href="{{path('front_confirmer',{'id':0})}}">aaaa</a> #}
+
+	{# <input type="button" onclick="window.location.href = {{path('front_confirmer',{'id':0})}};"/> #}
+
+
+	<input onclick="window.location.href ='{{path('front_confirmer',{'id':0})}}';" id="submit" value="Confirmer Command :{{total}} " class="btn btn-lg btn-primary btn-block">
+	{# <button onclick="window.location.href ='{{path('front_confirmer',{'id':0})}}';" id="submit" value="Confirmer Command :{{total}} " class="btn btn-lg btn-primary btn-block"></button> #}
+{% endblock %}
